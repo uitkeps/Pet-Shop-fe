@@ -7,14 +7,14 @@ import Services from "./Services/Services.jsx";
 import Slide from "./Slide/Slide.jsx";
 
 export default function Home() {
-  return (
-    <>
-      <Slide />
-      <AboutUs />
-      <Services />
-      <Comment />
-      <Gallery />
-      <News />
-    </>
-  );
+    return (
+        <>
+            <Slide />
+            <AboutUs />
+            <Services />
+            <Comment />
+            <Gallery />
+            {/* <News /> */}
+        </>
+    );
 }

@@ -17,73 +17,76 @@ import DetailPet from "../features/Shop/DetailPet/DetailPet";
 import ShopPet from "../features/Shop/ShopPet/ShopPet";
 
 const Routers = (props) => {
-  const { location } = props;
-  const pathName = location.pathname;
-  // const [user, setUser] = useState(null);
-  const [load, setLoad] = useState(false);
-  const dispatch = useDispatch();
+    const { location } = props;
+    const pathName = location.pathname;
+    // const [user, setUser] = useState(null);
+    const [load, setLoad] = useState(false);
+    const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.user.user);
-  useEffect(() => {
-    if (user.id) {
-      dispatch(userInfor(user.id));
+    const user = useSelector((state) => state.user.user);
+    useEffect(() => {
+        if (user.id) {
+            dispatch(userInfor(user.id));
+        }
+    }, [user]);
+
+    useEffect(() => {
+        dispatch(userData());
+    }, [load]);
+    const checkLoad = () => {
+        setLoad(!load);
+    };
+    const hangdleLogout = (e) => {
+        localStorage.removeItem("tokenPet");
+        setTimeout(() => {
+            dispatch(userData());
+        }, 200);
+    };
+    const getFirstPathName = (path) => {
+        let arrPath = path.split("/");
+        return arrPath[1].toLocaleLowerCase()
     }
-  }, [user]);
-
-  useEffect(() => {
-    dispatch(userData());
-  }, [load]);
-  const checkLoad = () => {
-    setLoad(!load);
-  };
-  const hangdleLogout = (e) => {
-    localStorage.removeItem("tokenPet");
-    setTimeout(() => {
-      dispatch(userData());
-    }, 200);
-  };
-  console.log("pathName", pathName);
-  return (
-    <div>
-      {pathName.toLocaleLowerCase() === "/login" ||
-      pathName.toLocaleLowerCase() === "/register" ||
-      pathName.toLocaleLowerCase() === "/admin" ? (
-        ""
-      ) : (
-        <Menu user={user} setUserMenu={hangdleLogout} loadUser={checkLoad} />
-      )}
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route exact path="/ListNews" component={ListNews} />
-        <Route exact path="/Shop" component={ShopPet} />
-        <Route path="/ListNews/:id" component={DetailNew} />
-        <Route path="/Shop/:type/:id" component={DetailPet} />
-        <Route path="/Login" component={Login} />
-        <Route path="/Register" component={Register} />
-        <Route path="/RegisterService/:id" component={RegisterService} />
-        <Route
-          path="/InforUser/:id"
-          render={() => {
-            return user.length === 0 ? <Login /> : <InforUser />;
-          }}
-        />
-        <Route
-          path="/Admin"
-          render={() => {
-            return user.role !== "admin" ? <Error /> : <Nav />;
-          }}
-        />
-      </Switch>
-      {pathName.toLocaleLowerCase() === "/login" ||
-      pathName.toLocaleLowerCase() === "/register" ||
-      pathName.toLocaleLowerCase() === "/admin" ? (
-        ""
-      ) : (
-        <Footer />
-      )}
-    </div>
-  );
+    return (
+        <div>
+            {getFirstPathName(pathName) === "login" ||
+                getFirstPathName(pathName) === "register" ||
+                getFirstPathName(pathName) === "admin" ? (
+                ""
+            ) : (
+                <Menu user={user} setUserMenu={hangdleLogout} loadUser={checkLoad} />
+            )}
+            <Switch>
+                <Route exact path="/">
+                    <Home />
+                </Route>
+                <Route exact path="/ListNews" component={ListNews} />
+                <Route exact path="/Shop" component={ShopPet} />
+                <Route path="/ListNews/:id" component={DetailNew} />
+                <Route path="/Shop/:type/:id" component={DetailPet} />
+                <Route path="/Login" component={Login} />
+                <Route path="/Register" component={Register} />
+                <Route path="/RegisterService/:id" component={RegisterService} />
+                <Route
+                    path="/InforUser/:id"
+                    render={() => {
+                        return user.length === 0 ? <Login /> : <InforUser />;
+                    }}
+                />
+                <Route
+                    path="/Admin"
+                    render={() => {
+                        return user.role !== "admin" ? <Error /> : <Nav />;
+                    }}
+                />
+            </Switch>
+            {getFirstPathName(pathName) === "login" ||
+                getFirstPathName(pathName) === "register" ||
+                getFirstPathName(pathName) === "admin" ? (
+                ""
+            ) : (
+                <Footer />
+            )}
+        </div>
+    );
 };
 export default withRouter(Routers);
